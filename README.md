@@ -32,6 +32,52 @@ PlantTherapist is essentially a digital plant assistant. It gives plant owners a
 
 The project appears to be a web application using a Python-based backend, HTML/CSS/JS frontend, and a containerized setup for easier development and deployment. The overall goal is to make plant care more accessible, organized, and proactive.
 
+## Automatic deployment with DockerHub and Render
+
+The GitHub Actions workflow at `.github/workflows/cicd.yml` can build and publish the Docker image to DockerHub, then trigger deployment on Render using a deploy hook URL. Add these repository secrets under **Settings → Secrets and variables → Actions**:
+
+- `DOCKERHUB_USERNAME`: DockerHub username
+- `DOCKERHUB_TOKEN`: DockerHub access token with push permission
+- `RENDER_DEPLOY_HOOK`: Render service deploy hook URL
+
+Example workflow code:
+
+```yaml
+name: CI/CD
+
+on:
+	push:
+		branches: [main]
+	workflow_dispatch:
+
+jobs:
+	build-and-deploy:
+		runs-on: ubuntu-latest
+		steps:
+			- name: Check out repository
+				uses: actions/checkout@v4
+
+			- name: Log in to DockerHub
+				uses: docker/login-action@v3
+				with:
+					username: ${{ secrets.DOCKERHUB_USERNAME }}
+					password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+			- name: Build and push Docker image
+				uses: docker/build-push-action@v6
+				with:
+					context: .
+					push: true
+					tags: ${{ secrets.DOCKERHUB_USERNAME }}/planttherapist:latest
+
+			- name: Trigger Render deployment
+				env:
+					RENDER_DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK }}
+				run: curl --fail --silent --show-error -X POST "$RENDER_DEPLOY_HOOK"
+```
+
+Configure the Render service to deploy the same DockerHub image. Keep the deploy hook URL in a GitHub secret rather than committing it to the repository.
+
 ## Summary
 
 In short, PlantTherapist is a gardening and plant wellness app focused on helping users care for plants more intelligently. It blends plant management, health insight, and practical recommendations into a single experience for everyday plant owners.

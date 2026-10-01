@@ -71,5 +71,3 @@ jobs:
         run: |
           ENCODED_IMAGE_URL=$(python3 -c 'import os, urllib.parse; print(urllib.parse.quote(os.environ["IMAGE_URL"], safe=""))')
           curl -fsS -X POST "${RENDER_DEPLOY_HOOK_URL}&imgURL=${ENCODED_IMAGE_URL}"
-
-          
