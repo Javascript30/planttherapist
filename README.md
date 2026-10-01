@@ -80,7 +80,17 @@ Configure the Render service to deploy the same DockerHub image. Keep the deploy
 
 The CI/CD workflow also runs automatic database migrations during deployment, ensuring the app's schema stays in sync with the latest release without needing a manual migration step.
 
+### Auto Migrations
 
+#### Backfill
+```bash
+    npm run db:generate -- --custom --name:backfill_email_address
+```
+```sql
+    -- Custom SQL migration file, put your code below! --
+    UPDATE "subscribers" SET "email_address" = "email" WHERE "email_address" IS NULL;
+    -- populates the NULL email with email from email column to email_address column
+```
 ## Summary
 
 In short, PlantTherapist is a gardening and plant wellness app focused on helping users care for plants more intelligently. It blends plant management, health insight, and practical recommendations into a single experience for everyday plant owners.
