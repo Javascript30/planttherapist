@@ -46,8 +46,7 @@ app.post('/api/subscribers', async (req, res) => {
     const email =
       typeof req.body?.email === 'string' ? req.body.email.trim() : '';
 
-    // if (!validator.isEmail(email)) {
-    if(!email.includes('@')) {
+    if (!validator.isEmail(email)) {
       return res.status(400).json({ error: 'Invalid email' });
     }
 
