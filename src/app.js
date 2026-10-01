@@ -15,6 +15,14 @@ app.get('/', async (req, res) => {
   res.sendFile(join(publicDir, 'index.html'));
 });
 
+app.get('/health', (req, res) => {
+  res.status(503).json({
+    status: 'error',
+    message:
+      'The garden gnomes have invaded our system and have broken everything!',
+  });
+});
+
 app.post('/api/subscribers', async (req, res) => {
   try {
     const email =
