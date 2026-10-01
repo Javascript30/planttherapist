@@ -78,6 +78,9 @@ jobs:
 
 Configure the Render service to deploy the same DockerHub image. Keep the deploy hook URL in a GitHub secret rather than committing it to the repository.
 
+The CI/CD workflow also runs automatic database migrations during deployment, ensuring the app's schema stays in sync with the latest release without needing a manual migration step.
+
+
 ## Summary
 
 In short, PlantTherapist is a gardening and plant wellness app focused on helping users care for plants more intelligently. It blends plant management, health insight, and practical recommendations into a single experience for everyday plant owners.
